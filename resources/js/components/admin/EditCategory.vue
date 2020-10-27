@@ -1,0 +1,183 @@
+<template>
+  <div>
+    <h1>Add category</h1>
+    <form
+      action="#"
+      @submit.prevent="edit ? updateCategory(id) : createcategory()"
+      enctype="multipart/form-data"
+    >
+      <div class="form-group">
+        <label>Name</label>
+        <input v-model="name" type="text" name="name" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>description</label>
+        <input v-model="description" type="text" name="description" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>image</label>
+        <input type="file" class="form-control" v-on:change="onFileChange" />
+      </div>
+      <div class="form-group">
+        <button v-show="!edit" type="submit" class="btn btn-primary">New Category</button>
+        <button v-show="edit" type="submit" class="btn btn-primary">Update item</button>
+      </div>
+    </form>
+    <!-- 
+    <h1>Categories</h1>
+    <ul class="list-group">
+      <li class="list-group-item" v-for="category in list">
+        <strong>{{category.name}}</strong>
+        {{category.description}} {{category.image}}
+        <button
+          @click="showCategory(category.id)"
+          class="btn btn-primary btn-xs"
+        >Edit</button>
+        <button @click="deleteCategory(category.id)" class="btn btn-danger btn-xs">Delete</button>
+      </li>
+    </ul>-->
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Action</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template v-for="category in list">
+          <tr v-bind:key="category.id">
+            <td>{{category.name}}</td>
+            <td>{{category.description}}</td>
+            <td>
+              <button @click="showCategory(category.id)" class="btn btn-primary btn-xs">Edit</button>
+            </td>
+
+            <td>
+              <button @click="deleteCategory(category.id)" class="btn btn-danger btn-xs">Delete</button>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script>
+export default {
+  data: function() {
+    return {
+      edit: false,
+      id: "",
+      name: "",
+      description: "",
+      file: "",
+      list: []
+    };
+  },
+
+  mounted: function() {
+    console.log("items Component Loaded...");
+    this.fetchCategory();
+  },
+
+  methods: {
+    onFileChange(e) {
+      console.log(e.target.files[0]);
+      this.file = e.target.files[0];
+    },
+
+    fetchCategory: function() {
+      console.log("Fetching items...");
+      axios
+        .get("api/category")
+        .then(response => {
+          console.log(response.data);
+          this.list = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+
+    createcategory: function() {
+      let self = this;
+      let formData = new FormData();
+      var file = document.querySelector("#report");
+      formData.append("file", this.file);
+      formData.append("name", this.name);
+      formData.append("description", this.description);
+      formData.append("_method", "POST"); // ADD THIS LINE
+      // axios({
+      //   method: "post",
+      //   url: "api/category/store2",
+      //   headers: {
+      //     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+      //   },
+      //   data: formData
+      // });
+      axios
+        .post("api/category/store2", formData)
+        .then(function() {
+          self.name = "";
+          self.description = "";
+          self.file = "";
+          self.fetchCategory();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+
+    showCategory: function(id) {
+      let self = this;
+      axios.get("api/category/" + id).then(function(response) {
+        self.id = response.data.id;
+        self.name = response.data.name;
+        self.description = response.data.description;
+      });
+      self.edit = true;
+    },
+
+    updateCategory: function(id) {
+      console.log("Updating category " + id + "...");
+      this.deleteCategory(id);
+      let self = this;
+
+      let formData = new FormData();
+      var file = document.querySelector("#report");
+      formData.append("file", this.file);
+      formData.append("id", this.id);
+      formData.append("name", this.name);
+      formData.append("description", this.description);
+      formData.append("_method", "POST"); // ADD THIS LINE
+
+      axios
+        .post("api/category/store4", formData)
+        .then(function() {
+          self.name = "";
+          self.description = "";
+
+          self.edit = false;
+          self.fetchCategory();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    deleteCategory: function(id) {
+      let self = this;
+      axios
+        .delete("api/category/" + id)
+        .then(function(response) {
+          self.fetchCategory();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }
+  }
+};
+</script>
