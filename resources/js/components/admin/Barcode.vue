@@ -7,15 +7,27 @@
         </p>
         
       
-  <input v-model="barcodeValue" /><br>
+  <!-- <input v-model="barcodeValue" /><br>
   <VueBarcode v-bind:value="barcodeValue">
     Show this if the rendering fails.
-  </VueBarcode>
+  </VueBarcode> -->
+ 
+   
 
-
-        
-        <StreamBarcodeReader
+       
+        <StreamBarcodeReader class="scan" style="display:block;"
           @decode="onDecode"></StreamBarcodeReader>
+           <button @click="startScan" class="btn btn-primary btn-xs">Scan</button>
+          <div class="itemContent" >
+              <img
+            v-bind:src="'storage/items/' + item.image"
+            class="gallery__img"
+            alt="item.image"
+          />
+             <p v-bind:value="item.name"></p>
+             <p>{{item.description}}</p>
+             <p>{{item.price}}</p>
+          </div>
     </div>
 </template>
 
@@ -54,7 +66,9 @@ export default {
     methods: {
         onDecode(result) {
             this.result = result;
-      
+            var scan = document.querySelector(".scan");
+            var itemContent = document.querySelector(".itemContent");
+
             console.log("Fetching items...");
             console.log(result);
 
@@ -68,11 +82,25 @@ export default {
             .then(response => {
           console.log(response.data);
           this.item = response.data;
+          scan.style.display = "none";
+          itemContent.style.display = "block";
+         
+
+
              })
             .catch(error => {
               console.log(error);
             });
     },
+
+     startScan() {
+         var scan = document.querySelector(".scan");
+         var itemContent = document.querySelector(".itemContent");
+
+         scan.style.display = "block";
+         itemContent.style.display = "none";
+     },
+     
 
         // async onInit(promise) {
         //     try {

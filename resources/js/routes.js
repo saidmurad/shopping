@@ -1,4 +1,5 @@
 //admin components
+import adminHome from "./components/admin/AdminHome";
 import editItem from "./components/admin/EditItem";
 import editItemInCategory from "./components/admin/EditItemInCategory";
 import editCategory from "./components/admin/EditCategory";
@@ -13,9 +14,11 @@ import viewOrderedItem from "./components/admin/ViewOrderedItem";
 import customerHome from "./components/customer/CustomerHome";
 import customerViewCategory from "./components/customer/Categories";
 import cartItems from "./components/customer/cartItems";
+import profile from "./components/customer/Profile";
+import editProfile from "./components/customer/EditProfile";
 
 import categoryItems from "./components/Edit";
-import items from "./components/Items";
+import items from "./components/customer/ItemsInSelectedCategory";
 import qrcode from "./components/customer/Qrcode";
 import barcode from "./components/admin/Barcode";
 
@@ -32,6 +35,12 @@ export default {
             path: "/customerHome",
             component: customerHome
         },
+    
+        {
+            path: "/adminHome",
+            component: adminHome
+        },
+
 
         {
             path: "/editItem",
@@ -106,6 +115,14 @@ export default {
         {
             path: "/barcode",
             component: barcode
+        },
+        {
+            path: "/profile",
+            component: profile
+        },
+        {
+            path: "/editProfile",
+            component: editProfile
         }
     ]
 };

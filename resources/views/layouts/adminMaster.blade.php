@@ -13,6 +13,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   
   <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/custom/main.css">
     
 </head>
 <body class="hold-transition sidebar-mini">
@@ -35,12 +36,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <aside class="custom-sidebar main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
       <!-- <img src="./img/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8"> -->
-      <span class="brand-text font-weight-light">Shopping</span>
+      <span class="custom-title brand-text font-weight-light">Shopping</span>
     </a>
 
     <!-- Sidebar -->
@@ -48,13 +49,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="./img/profile.JPG" class="img-circle elevation-2" alt="User Image">
+        <img src="{{asset('./storage/users/'.Auth::user()->image) }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">
-              {{Auth::user()->firstName}}
-              <p>{{Auth::user()->id}} </p>
-          </a>
+          <h4  class="custom-username d-block">
+              {{Auth::user()->firstName}} {{Auth::user()->lastName}}
+             
+          </h4>
         </div>
       </div>
 
@@ -65,9 +66,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                with font-awesome or any other icon font library -->
 
             <li class="nav-item">
-            <router-link to="/home" class="nav-link">
-                <i ></i>
-                <p>
+            <router-link to="/adminHome" class="nav-link">
+                <i class="nav-icon fas fa-home" style="color: #ffd36f;"></i>
+                <p class="custom-navlink">
                 Home
 
                 </p>
@@ -76,8 +77,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
             <li class="nav-item">
             <router-link to="/adminViewCategory" class="nav-link">
-                <i ></i>
-                <p>
+            <i class="nav-icon fas fa-store" style="color: #ffd36f;"></i>
+                <p class="custom-navlink">
                 View Category
 
                 </p>
@@ -91,22 +92,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
          
 
          <li class="nav-item">
-                <router-link to="/profile" class="nav-link">
-                    <i class="nav-icon fas fa-user orange"></i>
-                    <p>
+                <router-link to="/profile?id={{Auth::user()->id}}" class="nav-link">
+                    <i class="nav-icon fas fa-user " style="color: #ffd36f;"></i>
+                    <p class="custom-navlink">
                         Profile
                     </p>
                 </router-link>
          </li>
 
-         <li class="nav-item">
+         <!-- <li class="nav-item">
                 <router-link to="/editItem" class="nav-link">
                     
-                    <p>
+                    <p class="custom-navlink">
                         Edit Item
                     </p>
                 </router-link>
-         </li>
+         </li> -->
 
          <!-- <li class="nav-item">
                 <router-link to="/editItemCategory" class="nav-link">
@@ -119,8 +120,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
          <li class="nav-item">
                 <router-link to="/editCategory" class="nav-link">
-                    
-                    <p>
+                <i class="nav-icon fas fa-cog" style="color: #ffd36f;"></i>
+                    <p class="custom-navlink">
                         edit Category
                     </p>
                 </router-link>
@@ -128,8 +129,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
          <li class="nav-item">
                 <router-link to="/viewOrders" class="nav-link">
-                    
-                    <p>
+                <i class="nav-icon fas fa-shopping-basket" style="color: #ffd36f;"></i>
+                    <p class="custom-navlink">
                         View Orderes 
                     </p>
                 </router-link>
@@ -137,8 +138,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
          <li class="nav-item">
                 <router-link to="/viewCustomers" class="nav-link">
-                   
-                    <p>
+                <i class="nav-icon fas fa-users" style="color: #ffd36f;"></i>
+                    <p class="custom-navlink">
                         View Customers
                     </p>
                 </router-link>
@@ -146,8 +147,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
          <li class="nav-item">
                 <router-link to="/barcode" class="nav-link">
-          
-                    <p>
+                <i class="nav-icon fas fa-barcode" style="color: #ffd36f;"></i>
+                    <p class="custom-navlink">
                         barcode
                     </p>
                 </router-link>
@@ -157,8 +158,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <a class="nav-link" href="{{ route('logout') }}"
                 onclick="event.preventDefault();
                               document.getElementById('logout-form').submit();">
-                    <i class="nav-icon fa fa-power-off red"></i>
-                    <p>
+                    <i class="nav-icon fa fa-power-off red" style="color: #ffd36f;"></i>
+                    <p class="custom-navlink">
                         {{ __('Logout') }}
                     </p>
                  </a>

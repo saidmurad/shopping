@@ -8,6 +8,7 @@ use App\item;
 use App\order;
 use App\User;
 use App\deliveryAddress;
+use App\deliveryLocation;
 
 
 Route::group(['middleware' => 'api'], function(){
@@ -46,7 +47,8 @@ Route::get('category', function(){
 
   // Delete category
   Route::delete('category/{id}', function($id){
-    return category::destroy($id);
+     return category::destroy($id);
+
   });
 
 
@@ -60,6 +62,7 @@ Route::get('item', function(){
   // Get Single item
   Route::get('item/{id}', function($id){
     return item::findOrFail($id);
+    
   });
  
   // Add item
@@ -82,7 +85,8 @@ Route::post('item/store', function(Request $request){
  
   // Delete item
   Route::delete('item/{id}', function($id){
-    return item::destroy($id);
+   return item::destroy($id);
+    //return $id;
   });
 
   // Add category2
@@ -144,10 +148,46 @@ dd( $request->all());
 //$request->var_dump();
 });
 
+Route::get('getOrderId', function(Request $request){
+  $order_id = order::get()->last()->id;
+  return $order_id;
+});
+// function getOrderId(){
+//   $order_id = order::get()->last()->id;
+//   return $order_id;
+// }
+
 Route::post('delivery/store', function(Request $request){
+   $data= $request->input();
+//    $deliveryAddress = new deliveryAddress();        
+// $deliveryAddress->phoneNumber = "090909";
+// $deliveryAddress->address = "address"; 
+// $deliveryAddress->addressDetail = "address"; 
+// $deliveryAddress->order_id = 268; 
+//  $deliveryAddress->save();
+
+ $id = $request->query('id');
+
+$order = new order();        
+$order->user_id = $id; 
+$order->save();
+$order_id = $order->id;
+
+deliveryLocation::create(['phoneNumber' => $data[1]['phoneNumber'],'address' => $data[1]['address'], 'addressDetail' => $data[1]['addressDetail'], 'order_id' => $order_id]);
+
+$length = count($data[0]);
+for($i=0; $i < $length ; $i++) {
+  $item = new App\item();
+ 
+  $item = $item::find($data[0][$i]['item_id']);
+  $item->orders()->attach($order_id,[ 'quantity'=>$data[0][$i]['quantity'], 'total' => $data[0][$i]['total']]);
+ 
+}
+
   
- return deliveryAddress::create(['phoneNumber' => $request->input(['phoneNumber']), 'address' => $request->input(['address']), 'addressDetail' => $request->input(['addressDetail']), 'user_id' => 1]);
-  });
+  
+return count($data[0])-1;
+});
 
 
 
@@ -155,28 +195,94 @@ Route::post('delivery/store', function(Request $request){
 //crete ordered items
 Route::post('order/store', function(Request $request){
 $data= $request->input();
+$id = $request->query('id');
 
 $order = new order();        
-$order->user_id = 1;  
+$order->user_id = $id; 
 $order->save();
 $order_id = $order->id;
 
- foreach ( $data as $temp )
-    {
+$length = count($data)-1;
+for($i=0; $i < $length ; $i++) {
+  $item = new App\item();
+ 
+  $item = $item::find($data[$i]['item_id']);
+  $item->orders()->attach($order_id,[ 'quantity'=>$data[$i]['quantity'], 'total' => $data[$i]['total']]);
+ 
+}
 
-        $item = new App\item();
-        $item = $item::find($temp['item_id']);
-        $item->orders()->attach($order_id,[ 'quantity'=>$temp['quantity'], 'total' => $temp['total']]);
-    }
+
+
+
+//  foreach ( $data as $obj )
+//     {
+//         $item = new App\item();
+//         // $item = $item::find($temp['item_id']);
+//         $item = $item::find(2);
+//         // $item->orders()->attach($order_id,[ 'quantity'=>$temp['quantity'], 'total' => $temp['total']]);
+//         $i = count($data);
+//         // $item->orders()->attach($order_id,[ 'quantity'=>$quantity, 'total' => '35']);
+//     }
 
  return $data;
-  
+
 });
 
 
   //get customers
-  Route::get('customer', function(){
+  Route::get('customers', function(){
     return User::latest()->where('roll','2')->orderBy('created_at', 'desc')->get();
+  });
+
+  // Get Single user
+  Route::get('user/{id}', function($id){
+    return User::findOrFail($id);
+  });
+
+ // Get the last user
+  Route::get('customer', function(){
+    return User::orderBy('id', 'desc')->first();
+  });
+
+
+
+  // Add user it is for update purpose
+  Route::post('user/store', function(Request $request){
+    $id = $request->query('id');
+    $image =  $request['file']->getClientOriginalName();
+     $path = $request['file']->storeAs('public/users', $image);
+  
+   $user = User::findOrFail($id);
+   $user->firstName = "taked";
+   $user->lastName = $request->input(['lastName']);
+   $user->sex = $request->input(['sex']);
+   $user->phoneNumber = $request->input(['phoneNumber']);
+   $user->image = $image;
+  // $user->rate = $request->input(['rate']);
+   $user->save();
+
+    return  $request->input(['firstName']);
+ // return $request->input(['rate']);
+  });
+
+
+   // Add user it is for giving rate purpose
+  Route::post('user/giveRate', function(Request $request){
+    $id = $request->query('id');
+    $image =  $request['file']->getClientOriginalName();
+     $path = $request['file']->storeAs('public/users', $image);
+  
+   $user = User::findOrFail($id);
+   $user->firstName = "taked";
+   $user->lastName = $request->input(['lastName']);
+   $user->sex = $request->input(['sex']);
+   $user->phoneNumber = $request->input(['phoneNumber']);
+   $user->image = $image;
+   $user->rate = $request->input(['rate']);
+   $user->save();
+
+    return  $request->input(['firstName']);
+ // return $request->input(['rate']);
   });
 
 
@@ -208,6 +314,16 @@ Route::get('order', function(){
 });
 
 //for ordered items
+Route::get('orderedItems/{id}', function($id){
+ $order = order::findOrFail($id);
+   return $order->items()->get();
+});
+
+//Get the last ordered item
+Route::get('orderedItem', function(){
+   $order = order::orderBy('id', 'desc')->first();
+  return $order->items()->get();
+});
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

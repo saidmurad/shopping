@@ -44,12 +44,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <aside class="custom-sidebar main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
       <!-- <img src="./img/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8"> -->
-      <span class="brand-text font-weight-light">Shopping</span>
+      <span class="custom-title brand-text font-weight-light">SHOPPING</span>
     </a>
 
     <!-- Sidebar -->
@@ -57,23 +57,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="./img/profile.jpg" class="img-circle elevation-2" alt="User Image">
+          
+          <img src="{{asset('./storage/users/'.Auth::user()->image) }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="#" class="d-block">
-              
-              @if(Auth::user()->roll==1)
-              {
-                <p>Admin</p>
-               
-              }
-              @else
-              
-                <p>Customer</p>
-                <p>{{Auth::user()->id}}</p>
-              
-              @endif
-              
+                <h4 class="custom-username"><span>{{Auth::user()->firstName}} </span>{{Auth::user()->lastName}}</h4>
           </a>
         </div>
       </div>
@@ -86,8 +75,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
             <li class="nav-item">
             <router-link to="/customerHome" class="nav-link">
-                <i ></i>
-                <p>
+            <i class="nav-icon fas fa-home" style="color: #ffd36f;"></i>
+                <p class="custom-navlink">
                 Home
 
                 </p>
@@ -95,9 +84,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </li>
 
             <li class="nav-item">
-            <router-link to="/cartItems" class="nav-link">
-                <i ></i>
-                <p>
+            <router-link to="/cartItems?id={{Auth::user()->id}}" class="nav-link">
+            <i class="nav-icon fas fa-shopping-cart" style="color: #ffd36f;"></i>
+                <p class="custom-navlink">
                 Cart Items
 
                 </p>
@@ -108,8 +97,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <li class="nav-item">
             <!-- <router-link to= "nn" class="nav-link"> -->
             <router-link to="/customerViewCategory?id={{Auth::user()->id}}" class="nav-link">
-                <i ></i>
-                <p>
+            <i class="nav-icon fas fa-store" style="color: #ffd36f;"></i>
+                <p class="custom-navlink">
                 View Category
                
                 </p>
@@ -119,44 +108,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
          
 
          <li class="nav-item">
-                <router-link to="/profile" class="nav-link">
-                    <i class="nav-icon fas fa-user orange"></i>
-                    <p>
+                <router-link to="/profile?id={{Auth::user()->id}}" class="nav-link">
+                    <i class="nav-icon fas fa-user orange" style="color: #ffd36f;"></i>
+                    <p class="custom-navlink">
                         Profile
                     </p>
                 </router-link>
          </li>
 
-  <!-- for barcode test -->
-         <li class="nav-item">
-                <router-link to="/qrcode" class="nav-link">
-                    <i class="nav-icon fas fa-user orange"></i>
-                    <p>
-                        qrcode
-                    </p>
-                </router-link>
-         </li>
 
-         <!-- <li class="nav-item">
-                <router-link to="/barcode" class="nav-link">
-                    <i class="nav-icon fas fa-user orange"></i>
-                    <p>
-                        barcode
-                    </p>
-                </router-link>
-         </li>
-
-      <li>
-    {!! DNS1D::getBarcodeHTML('www.finebottledwater.com', "C128",1.4,22) !!}
-    </li> -->
-
-         
-            <li class="nav-item">
+          <li class="nav-item">
                 <a class="nav-link" href="{{ route('logout') }}"
                 onclick="event.preventDefault();
                               document.getElementById('logout-form').submit();">
-                    <i class="nav-icon fa fa-power-off red"></i>
-                    <p>
+                    <i class="nav-icon fa fa-power-off red" style="color: #ffd36f;"></i>
+                    <p class="custom-navlink">
                         {{ __('Logout') }}
                     </p>
                  </a>

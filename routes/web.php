@@ -39,7 +39,8 @@ Route::group(['middleware'=> ['web','auth']], function(){
 
 Route::group(['middleware' => 'prevent-back-history'],function(){
     Auth::routes();
-    Route::get('/adminHome', 'HomeController@index');
+    Route::get('/adminHome', 'HomeController@preventBackAdmin');
+    Route::get('/customerHome', 'HomeController@preventBackCustomer');
   });
 
   Route::get('/{any}', function () {

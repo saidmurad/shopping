@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div class="container-fill">
+    <div class="row">
+      <div class="col-5">
     <h1>Add category</h1>
     <form
       action="#"
@@ -23,6 +25,7 @@
         <button v-show="edit" type="submit" class="btn btn-primary">Update item</button>
       </div>
     </form>
+    </div>
     <!-- 
     <h1>Categories</h1>
     <ul class="list-group">
@@ -36,8 +39,8 @@
         <button @click="deleteCategory(category.id)" class="btn btn-danger btn-xs">Delete</button>
       </li>
     </ul>-->
-
-    <table class="table table-bordered">
+      <div class="col-7">
+    <!-- <table class="table table-bordered">
       <thead>
         <tr>
           <th>Name</th>
@@ -61,7 +64,34 @@
           </tr>
         </template>
       </tbody>
-    </table>
+    </table> -->
+
+     <div>
+            <div class=" d-flex align-items-center">
+                <div style="width:60%">CATEGORY</div>
+                <div style="width:20%">EDIT</div>
+                <div style="width:20%">DELETE</div>
+                
+            </div>
+            <hr>
+            <div v-for="category in list" :key="category.name">
+            <div class="d-flex align-items-center"  >
+                <div  style="width:60%"> <img
+            v-bind:src="'../storage/categories/' + category.image"
+            class="float-left item-image"
+            alt="category.image"
+          /> <span class="item-description ml-3">{{category.description}}</span>
+          </div>
+                <div  style="width:20%"><button class="btn btn-primary" @click="showCategory(category.id)" ><i class="fas fa-edit cyan-text"></i><span> Edit</span></button></div>
+                <div  style="width:20%"><button class="btn btn-danger" @click="deleteCategory(category.id)" ><i class="fas fa-trash-alt"> <span> Delete</span> </i></button></div>
+               
+                
+            </div>
+            <hr>
+        </div>
+        </div>
+    </div>
+    </div>
   </div>
 </template>
 
@@ -73,6 +103,7 @@ export default {
       id: "",
       name: "",
       description: "",
+      image: "",
       file: "",
       list: []
     };
@@ -137,6 +168,11 @@ export default {
         self.id = response.data.id;
         self.name = response.data.name;
         self.description = response.data.description;
+        self.image = response.data.image;
+
+         let fileUrl ="storage/categories/" + self.image;
+         self.urlToBlob(fileUrl).then(function(blob){
+         self.file = new File([blob], self.image);})
       });
       self.edit = true;
     },
@@ -145,6 +181,8 @@ export default {
       console.log("Updating category " + id + "...");
       this.deleteCategory(id);
       let self = this;
+
+     
 
       let formData = new FormData();
       var file = document.querySelector("#report");
@@ -177,7 +215,38 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+    },
+    urlToBlob: function(url){
+ return new Promise((resolve,reject)=>{
+    var xhr = new XMLHttpRequest();
+    xhr.open( "GET", url, true );
+    xhr.responseType = "blob";
+    xhr.onload = function( e ) {
+        resolve(this.response)
+    };
+    xhr.onerror = function( error ){
+        reject(error)
     }
+    xhr.send();
+ })
+}
   }
 };
 </script>
+
+<style  scoped>
+h3{
+    text-align: center;
+    margin: 20px;
+}
+.column-header div{
+    font-size:15px;
+}
+.item-image{
+    width: 70px; 
+    height: 70px;        
+  }
+ 
+  
+
+</style>

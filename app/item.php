@@ -12,9 +12,19 @@ class item extends Model
     {
         return $this->belongsTo('App\category');
     }
+    
 
     public function orders()
     {
         return $this->belongsToMany('App\order')->withPivot('quantity', 'total')->withTimestamps();
+    }
+
+    public function delete()
+    {
+        // delete all related photos 
+        $this->orders()->delete();
+       
+        // delete the user
+        return parent::delete();
     }
 }

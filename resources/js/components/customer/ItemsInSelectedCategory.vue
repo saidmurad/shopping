@@ -1,8 +1,9 @@
 <template>
   <div>
     <h1>{{category.name}}</h1>
+  
     <br />
-    <div>
+    <!-- <div> -->
       <!-- <div>
         <h1>{{category.name}}</h1>
         <router-link
@@ -12,7 +13,7 @@
         <router-link to="/viewCategory" class="btn btn-primary">Go Back</router-link>
       </div>-->
 
-      <div class="image-wrapper">
+      <!-- <div class="image-wrapper">
         <div v-for="item in list" :key="item.id">
           <img v-bind:src="'../storage/items/' + item.image" class="gallery__img" alt="Image 1" />
           <h3 class="title" v-html="item.name"></h3>
@@ -29,7 +30,45 @@
           </h4>
         </div>
       </div>
+    </div> -->
+
+<div class="container"
+    >
+      
+      <div
+        class="row"
+       
+      >
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3  grid-onepart"  v-for="item in list"
+        :key="item.id">
+        <!-- id is user id and item.id is category id , don't be confused -->
+        <div class="item-box">
+        <router-link :to="'/item/' + item.id ">
+          <img
+            v-bind:src="'../storage/items/' + item.image"
+            class="item-image"
+            alt="item.image"
+          />
+           </router-link>
+          <h4 class="item-name " v-html="item.name"></h4>
+          <p class="item-description text-muted">{{ item.description }}</p>
+          <input class="float-left" type="number" v-model="quantity" style="width:60px" />
+          <span class="item-price   float-right">{{item.price}}birr</span>
+          <br><br>
+          <div class="d-flex justify-content-center">
+           <span
+              @click="addToCart( item.id, item.name, item.price, item.image, item.description )"
+              class="btn btn-primary"
+             
+            >Add To Cart</span>
+            </div>
+          </div>
+          </div>
+       
+      </div>
+   
     </div>
+
     <div>
       <h1>items</h1>
       <table class="table table-bordered">
@@ -143,7 +182,7 @@ export default {
         });
     },
 
-    addToCart: function(id, name, price) {
+    addToCart: function(id, name, price, image, description) {
       console.log("adding to cart...");
       let self = this;
       let quantity = this.quantity;
@@ -152,6 +191,8 @@ export default {
         item_id: id,
         name: name,
         price: price,
+        image: image,
+        description: description,
         quantity: quantity,
         total: total
       });
@@ -159,6 +200,8 @@ export default {
         item_id: id,
         name: name,
         price: price,
+        image: image,
+        description: description,
         quantity: quantity,
         total: total
       });
@@ -171,5 +214,46 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.image-wrapper{
+  padding-top: 10px;
+}
+.grid-onepart{
+  padding: 10px;
+}
+.item-box{
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+  /* border: 3px solid #c59d5f; */
+   border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius:0.5rem;
+  }
+  .item-box:hover{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+  
+  .item-image{
+    width: 100%; 
+    height: 170px;        
+  }
+  .item-name{
+    padding: 3px;         
+    margin-bottom:0 ;
+    text-transform: capitalize;
+  }
+  .item-description{
+    color: #617d98;
+   
+   
+  }
+  .item-price{
+    font-weight: 700;
+    
+  }
+  .add-tocart{
+     text-align: center;
+  }
+</style>
+
 
 

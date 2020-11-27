@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <div class="container-fill">
+    <StreamBarcodeReader class="scan" style="display:none;"
+          @decode="onDecode"></StreamBarcodeReader>
+    <div class="row">
+      <div class="col-5">
     <h1>Add Item</h1>
     <form
       action="#"
@@ -18,6 +22,8 @@
         <label>Price</label>
         <input v-model="price" type="text" name="price" class="form-control" />
       </div>
+           <button @click="startScan" class="btn btn-primary btn-xs">Scan</button>
+
       <div class="form-group">
         <label>Barcode</label>
         <input v-model="barcode" type="text" name="barcode" class="form-control" />
@@ -31,31 +37,58 @@
         <button v-show="edit" type="submit" class="btn btn-primary">Update item</button>
       </div>
     </form>
-
+    </div>
+   
+      <div class="col-7">
     <h1>items</h1>
-    <ul class="list-group">
-      <li class="list-group-item" v-for="item in list" v-bind:key="item.id">
-        <strong>{{item.name}}</strong>
-        {{item.description}} {{item.image}}
-        <button
-          @click="showItem(item.id)"
-          class="btn btn-primary btn-xs"
-        >Edit</button>
-        <button @click="deleteItem(item.id)" class="btn btn-danger btn-xs">Delete</button>
-      </li>
-    </ul>
+<div>
+            <div class=" d-flex align-items-center">
+                <div style="width:45%">ITEM</div>
+                <div style="width:15%">PRICE</div>
+                <div style="width:20%">EDIT</div>
+                <div style="width:20%">DELETE</div>
+                
+            </div>
+            <hr>
+            <div v-for="item in list" :key="item.id">
+            <div class="d-flex align-items-center"  >
+                <div  style="width:50%"><p class="p-0 m-0 font-weight-bold">{{item.name}}</p> <img
+            v-bind:src="'../storage/items/' + item.image"
+            class="float-left item-image"
+            alt="item.image"
+          /> <span class="item-description ml-3">{{item.description}}</span>
+          </div>
+                <div  style="width:15%"><span >{{item.price}}</span></div>
+                <div  style="width:20%"><button class="btn btn-primary" @click="showItem(item.id)" ><i class="fas fa-edit cyan-text"></i><span> Edit</span></button></div>
+                <div  style="width:20%"><button class="btn btn-danger" @click="deleteItem(item.id)" ><i class="fas fa-trash-alt"> <span> Delete</span> </i></button></div>
+               
+                
+            </div>
+            <hr>
+        </div>
+        </div>
+
+    </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { StreamBarcodeReader  } from "vue-barcode-reader";
+import  VueBarcode  from "vue-barcode";
+
+
 export default {
+    components: { StreamBarcodeReader , VueBarcode },
   data: function() {
     return {
+      result:"",
       edit: false,
       id: "",
       name: "",
       description: "",
       price: "",
+      image:"",
       barcode: "",
       file: "",
       list: [],
@@ -133,6 +166,11 @@ export default {
         self.price = response.data.price;
         self.barcode = response.data.barcode;
         self.description = response.data.description;
+        self.image = response.data.image;
+
+         let fileUrl ="../storage/items/" + self.image;
+         self.urlToBlob(fileUrl).then(function(blob){
+         self.file = new File([blob], self.image);})
       });
       self.edit = true;
     },
@@ -171,12 +209,68 @@ export default {
       axios
         .delete("../api/item/" + id)
         .then(function(response) {
+          console.log(response.data);
           self.fetchItem();
         })
         .catch(function(error) {
           console.log(error);
         });
+    },
+    urlToBlob: function(url){
+ return new Promise((resolve,reject)=>{
+    var xhr = new XMLHttpRequest();
+    xhr.open( "GET", url, true );
+    xhr.responseType = "blob";
+    xhr.onload = function( e ) {
+        resolve(this.response)
+    };
+    xhr.onerror = function( error ){
+        reject(error)
     }
+    xhr.send();
+ })
+},
+
+ onDecode(result) {
+            this.result = result;
+            var scan = document.querySelector(".scan");
+           // var itemContent = document.querySelector(".itemContent");
+
+            console.log("Fetching items...");
+            console.log(result);
+            this.barcode = result;
+            console.log(this.barcode);
+
+
+          scan.style.display = "none";
+        //  itemContent.style.display = "block";
+          
+    },
+
+     startScan() {
+         var scan = document.querySelector(".scan");
+         //var itemContent = document.querySelector(".itemContent");
+
+         scan.style.display = "block";
+         //itemContent.style.display = "none";
+     },
   }
 };
 </script>
+
+<style  scoped>
+h3{
+    text-align: center;
+    margin: 20px;
+}
+.column-header div{
+    font-size:15px;
+}
+.item-image{
+    width: 70px; 
+    height: 70px;        
+  }
+ 
+  
+
+</style>

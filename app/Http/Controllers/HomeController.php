@@ -21,8 +21,12 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function preventBackAdmin()
     {
-        return view('home');
+        return view('adminHome');
+    }
+    public function preventBackcustomer()
+    {
+        return view('customerHome');
     }
 }
