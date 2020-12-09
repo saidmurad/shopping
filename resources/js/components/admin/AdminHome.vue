@@ -55,46 +55,6 @@
         </div>
    </div>
 
-    <div class="row mt-2">
-      <div class="col-md-12">
-        <nav>
-          <ul class="pagination">
-            <li v-bind:class="{disabled:!pagination.first_link}" class="page-item">
-              <router-link
-                to="#"
-                @click="fetchcategoryList(pagination.first_link)"
-                class="page-link"
-              >&laquo;</router-link>
-            </li>
-            <li v-bind:class="{disabled:!pagination.prev_link}" class="page-item">
-              <a href="#" @click="fetchcategoryList(pagination.prev_link)" class="page-link">&lt;</a>
-            </li>
-            <li
-              v-for="n in pagination.last_page"
-              v-bind:key="n"
-              v-bind:class="{active: pagination.current_page == n}"
-              class="page-item"
-            >
-              <a
-                href="#"
-                @click="fetchcategoryList(pagination.path_page + n)"
-                class="page-link"
-              >{{n}}</a>
-            </li>
-            <li v-bind:class="{disabled:!pagination.next_link}" class="page-item">
-              <a href="#" @click="fetchcategoryList(pagination.next_link)" class="page-link">&gt;</a>
-            </li>
-            <li v-bind:class="{disabled:!pagination.last_link}" class="page-item">
-              <a href="#" @click="fetchcategoryList(pagination.last_link)" class="page-link">&raquo;</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div class="col-md-12">
-        Page: {{pagination.from_page}} - {{pagination.to_page}}
-        Total: {{pagination.total_page}}
-      </div>
-    </div>
   </div>
 </template>
 
@@ -105,8 +65,8 @@ export default {
       list: [],
       search: "",
       showSearch: false,
-      caris: [],
-      pagination: {}
+      caris: []
+      
     };
   },
   mounted() {
@@ -114,26 +74,13 @@ export default {
     this.fetchcategoryList();
   },
   methods: {
-    fetchcategoryList: function(pagi) {
-      pagi = pagi || "api/category";
+    fetchcategoryList: function() {
       console.log("Fetching categorys...");
       axios
-        .get(pagi)
+        .get("api/category")
         .then(response => {
           console.log(response.data);
           this.list = response.data;
-          this.pagination = {
-            current_page: response.meta.current_page,
-            last_page: response.meta.last_page,
-            from_page: response.meta.from,
-            to_page: response.meta.to,
-            total_page: response.meta.total,
-            path_page: response.meta.path + "?page=",
-            first_link: response.links.first,
-            last_link: response.links.last,
-            prev_link: response.links.prev,
-            next_link: response.links.next
-          };
         })
         .catch(error => {
           console.log(error);

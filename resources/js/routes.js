@@ -8,7 +8,6 @@ import adminViewCategory from "./components/admin/Categories";
 import itemsInSelectedCategory from "./components/admin/ItemsInSelectedCategory";
 import userDetail from "./components/admin/UserDetail";
 import viewOrders from "./components/admin/ViewOrders";
-import viewOrderedItem from "./components/admin/ViewOrderedItem";
 
 //customer components
 import customerHome from "./components/customer/CustomerHome";
@@ -55,11 +54,6 @@ export default {
         {
             path: "/editCategory",
             component: editCategory
-        },
-
-        {
-            path: "/viewOrderedItem",
-            component: viewOrderedItem
         },
 
         {

@@ -1,8 +1,10 @@
 <template>
   <div class="container-fill">
     <div class="row">
-      <div class="col-5">
-    <h1>Add category</h1>
+      <div class="col-5 pt-5">
+         <div class="shadow p-2 bg-light ">
+    <h4 class="text-center text-info"> Add Category</h4>
+    
     <form
       action="#"
       @submit.prevent="edit ? updateCategory(id) : createcategory()"
@@ -26,6 +28,7 @@
       </div>
     </form>
     </div>
+     </div>
     <!-- 
     <h1>Categories</h1>
     <ul class="list-group">
@@ -40,33 +43,8 @@
       </li>
     </ul>-->
       <div class="col-7">
-    <!-- <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Action</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <template v-for="category in list">
-          <tr v-bind:key="category.id">
-            <td>{{category.name}}</td>
-            <td>{{category.description}}</td>
-            <td>
-              <button @click="showCategory(category.id)" class="btn btn-primary btn-xs">Edit</button>
-            </td>
-
-            <td>
-              <button @click="deleteCategory(category.id)" class="btn btn-danger btn-xs">Delete</button>
-            </td>
-          </tr>
-        </template>
-      </tbody>
-    </table> -->
-
      <div>
+       <h4 class="text-center text-info"> Categories</h4>
             <div class=" d-flex align-items-center">
                 <div style="width:60%">CATEGORY</div>
                 <div style="width:20%">EDIT</div>

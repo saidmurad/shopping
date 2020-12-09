@@ -1,44 +1,52 @@
 <template>
   <div>
-    <h1>{{category.name}}</h1>
-  
-    <br />
-    <!-- <div> -->
-      <!-- <div>
-        <h1>{{category.name}}</h1>
-        <router-link
-          :to="'/categoryItems/' + category.id"
-          class="btn btn-primary"
-        >Edit item InCategory</router-link>
-        <router-link to="/viewCategory" class="btn btn-primary">Go Back</router-link>
-      </div>-->
-
-      <!-- <div class="image-wrapper">
-        <div v-for="item in list" :key="item.id">
-          <img v-bind:src="'../storage/items/' + item.image" class="gallery__img" alt="Image 1" />
-          <h3 class="title" v-html="item.name"></h3>
-          <p class="text-muted">{{item.description}}</p>
-          <h4>
-            <span class="small-text text-muted float-left">{{item.price}}birr</span>
-
-            <span
-              @click="addToCart( item.id, item.name, item.price )"
-              class="btn btn-primary"
-            >Add To Cart</span>
-
-            <input type="number" v-model="quantity" style="width:60px" />
-          </h4>
+    <div class="col-md-8">
+      <div class="input-group">
+        <input type="text" v-model="search" class="form-control" />
+        <div class="input-group-prepend">
+          <button @click.prevent="searchCategory()" class="btn btn-primary">
+            <i class="fa fa-search"></i>
+          </button>
         </div>
       </div>
-    </div> -->
+    </div>
 
-<div class="container"
-    >
-      
-      <div
-        class="row"
+    <h3 class="text-center text-primary"> {{category.name}}</h3>
+
+<div  v-if="showSearch==true" class="container">
+  <div class="row">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3  grid-onepart"  v-for="item in caris"
+        :key="item.id">
+        <!-- id is user id and item.id is category id , don't be confused -->
+        <div class="item-box">
+        <router-link :to="'/item/' + item.id ">
+          <img
+            v-bind:src="'../storage/items/' + item.image"
+            class="item-image"
+            alt="item.image"
+          />
+           </router-link>
+          <h4 class="item-name " v-html="item.name"></h4>
+          <p class="item-description text-muted">{{ item.description }}</p>
+          <input class="float-left" type="number" v-model="quantity" style="width:60px" />
+          <span class="item-price   float-right">{{item.price}}birr</span>
+          <br><br>
+          <div class="d-flex justify-content-center">
+           <span
+              @click="addToCart( item.id, item.name, item.price, item.image, item.description )"
+              class="btn btn-primary"
+             
+            >Add To Cart</span>
+            </div>
+          </div>
+          </div>
        
-      >
+      </div>
+   
+    </div>
+
+    <div  v-if="showSearch==false" class="container">
+  <div class="row">
       <div class="col-12 col-sm-6 col-md-4 col-lg-3  grid-onepart"  v-for="item in list"
         :key="item.id">
         <!-- id is user id and item.id is category id , don't be confused -->
@@ -69,7 +77,7 @@
    
     </div>
 
-    <div>
+    <!-- <div>
       <h1>items</h1>
       <table class="table table-bordered">
         <thead>
@@ -83,7 +91,7 @@
         </thead>
         <tbody>
           <template v-for="item in listsValue">
-            <tr v-bind:key="item.name">
+            <tr v-bind:key="item.id">
               <td>{{item.name}}</td>
               <td>{{item.price}}</td>
               <td>{{item.quantity}}</td>
@@ -97,7 +105,7 @@
       </table>
 
       <span @click="createOrder()" class="btn btn-primary">Order</span>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -105,6 +113,9 @@
 export default {
   data: function() {
     return {
+      search: "",
+      showSearch: false,
+      caris: [],
       id: this.$route.params.id,
       quantity: "1",
       category: {},
@@ -210,6 +221,26 @@ export default {
 
     deleteFromCart: function(item_id) {
       this.cart.splice(this.cart, item_id);
+    },
+    searchCategory: function() {
+      console.log("Fetching search categorys...");
+      
+      axios
+        .get("../api/searchItem", {
+          params: {
+            q: this.search,
+          }
+        })
+        //.then(res => res.json())
+        .then(response => {
+          console.log(response.data);
+          this.caris = response.data;
+          this.search = "";
+          this.showSearch = true;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };

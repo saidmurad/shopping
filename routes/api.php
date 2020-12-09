@@ -122,12 +122,23 @@ Route::post('item/store', function(Request $request){
 
       //for update item
       Route::post('item/store4', function(Request $request){
-        // return category::create(['name' => $request->input(['name']), 'description' => $request->input(['description']), 'image' => $request->file('file')->getClientOriginalName()]);
-        // $image = Input::file('file')->getClientOriginalName();
-         $image =  $request['file']->getClientOriginalName();
-         $path = $request['file']->storeAs('public/items', $image);
-        return item::create(['id' => $request->input(['id']),'name' => $request->input(['name']), 'description' => $request->input(['description']), 'category_id' => $request->input(['category_id']), 'price' => $request->input(['price']),'isDeleted' =>'no' ,  'image' => $request['file']->getClientOriginalName()]);
-        });
+      // $id = $request->query('id');
+    $image =  $request['file']->getClientOriginalName();
+     $path = $request['file']->storeAs('public/users', $image);
+  
+   $item = item::findOrFail($request->input(['id']));
+   $item->name = $request->input(['name']);
+   $item->description = $request->input(['description']);
+   $item->category_id = $request->input(['category_id']);
+   $item->price = $request->input(['price']);
+   $item->isDeleted = 'no';
+   $item->image = $image;
+  // $user->rate = $request->input(['rate']);
+   $item->save();
+
+    return  $request->input(['name']);
+      
+      });
 
 
   // Get  items for a given categoryId
@@ -152,19 +163,11 @@ Route::get('getOrderId', function(Request $request){
   $order_id = order::get()->last()->id;
   return $order_id;
 });
-// function getOrderId(){
-//   $order_id = order::get()->last()->id;
-//   return $order_id;
-// }
+
 
 Route::post('delivery/store', function(Request $request){
    $data= $request->input();
-//    $deliveryAddress = new deliveryAddress();        
-// $deliveryAddress->phoneNumber = "090909";
-// $deliveryAddress->address = "address"; 
-// $deliveryAddress->addressDetail = "address"; 
-// $deliveryAddress->order_id = 268; 
-//  $deliveryAddress->save();
+
 
  $id = $request->query('id');
 
@@ -253,7 +256,7 @@ for($i=0; $i < $length ; $i++) {
      $path = $request['file']->storeAs('public/users', $image);
   
    $user = User::findOrFail($id);
-   $user->firstName = "taked";
+   $user->firstName = $request->input(['firstName']);
    $user->lastName = $request->input(['lastName']);
    $user->sex = $request->input(['sex']);
    $user->phoneNumber = $request->input(['phoneNumber']);
@@ -299,18 +302,27 @@ for($i=0; $i < $length ; $i++) {
     // ->where('barcode', $barcode)->first();
   });
 
-  //search bar
+  //search category by regular expression
   Route::get('searchCategory', function(Request $request ){
     $search = $request->input(['q']);
     return category::query()->where('name','like','%'.$search.'%')->get();
     //return $request->all();
+  });
+ //search item by regular expression
+  Route::get('searchItem', function(Request $request ){
+    //$id = $request->input(['id']);
+    // $item = App\category::find($id)->items;
+     $search = $request->input(['q']);
+    return item::query()->where('name','like','%'.$search.'%')->get();
+    //return item::latest()->get();
   });
 
 });
 
 //for orders
 Route::get('order', function(){
-  return order::latest()->orderBy('created_at', 'desc')->get();
+  //return order::latest()->orderBy('created_at', 'desc')->get();
+  return order::with('deliveryLocations')->with('user')->orderBy('created_at', 'desc')->get() ;
 });
 
 //for ordered items

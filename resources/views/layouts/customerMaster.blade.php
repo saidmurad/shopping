@@ -46,11 +46,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Main Sidebar Container -->
   <aside class="custom-sidebar main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <p  class="brand-link">
       <!-- <img src="./img/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8"> -->
-      <span class="custom-title brand-text font-weight-light">SHOPPING</span>
-    </a>
+      <span class="custom-title brand-text font-weight-light "><span> HABESHA</span> <br>  SUPERMARKET</span>
+    </p>
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -62,7 +62,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
         <div class="info">
           <a href="#" class="d-block">
-                <h4 class="custom-username"><span>{{Auth::user()->firstName}} </span>{{Auth::user()->lastName}}</h4>
+                <p class="custom-username font-weight-bold"><span>{{Auth::user()->firstName}} </span>{{Auth::user()->lastName}}</p>
           </a>
         </div>
       </div>
@@ -161,7 +161,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       Anything you want
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2014-2018 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2020 </strong> All rights reserved.
   </footer>
 </div>
 <!-- ./wrapper -->

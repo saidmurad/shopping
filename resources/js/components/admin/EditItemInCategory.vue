@@ -4,7 +4,8 @@
           @decode="onDecode"></StreamBarcodeReader>
     <div class="row">
       <div class="col-5">
-    <h1>Add Item</h1>
+        <div class="shadow p-2 bg-light ">
+    <h4 class="text-center text-info"> Add Product</h4>
     <form
       action="#"
       @submit.prevent="edit ? updateItem(id) : createItem()"
@@ -38,9 +39,10 @@
       </div>
     </form>
     </div>
+    </div>
    
       <div class="col-7">
-    <h1>items</h1>
+    <h4 class="text-center text-info"> Products</h4>
 <div>
             <div class=" d-flex align-items-center">
                 <div style="width:45%">ITEM</div>
@@ -177,7 +179,7 @@ export default {
 
     updateItem: function(id) {
       console.log("Updating item " + id + "...");
-      this.deleteItem(id);
+      //this.deleteItem(id);
       let self = this;
 
       let formData = new FormData();
@@ -193,7 +195,8 @@ export default {
 
       axios
         .post("../api/item/store4", formData)
-        .then(function() {
+        .then(function(response) {
+          console.log(response.data);
           self.name = "";
           self.description = "";
 

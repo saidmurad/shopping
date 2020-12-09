@@ -4,7 +4,7 @@
 <!-- home section -->
 <div id="home">
 <div class="centerSection">
-        <h1>Gebeya Supermarket</h1>
+        <h1 class="custom-title">HABESHA SUPERMARKET</h1>
         <p>Look our goods from your home and reduce your time,cost, effort to shop products. It is much easy to use and you will love it. </p>
 </div>
 </div>

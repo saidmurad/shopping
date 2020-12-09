@@ -33,9 +33,10 @@
         <div>
             <div class="column-header d-flex align-items-center">
                 <div style="width:50%">PRODUCT</div>
-                <div style="width:16%">PRICE</div>
-                <div style="width:16%">QUANTITY</div>
-                <div style="width:16%">TOTAL</div>
+                <div style="width:14%">PRICE</div>
+                <div style="width:14%">QUANTITY</div>
+                <div style="width:14%">TOTAL</div>
+                <div style="width:8%">DELETE</div>
             </div>
             <hr>
             <div v-for="item in listsValue" :key="item.name">
@@ -46,13 +47,21 @@
             alt="item.image"
           /> <span class="item-description ml-3">{{item.description}}</span>
           </div>
-                <div class="item-price" style="width:16%">{{item.price}}Birr</div>
-                <div class="item-quantity" style="width:16%">{{item.quantity}}</div>
-                <div class="item-price" style="width:16%">{{item.total}}Birr</div>
-                
+                <div class="item-price" style="width:14%">{{item.price}}Birr</div>
+                <div class="item-quantity" style="width:14%">{{item.quantity}}</div>
+                <div class="item-price" style="width:14%">{{item.total}}Birr</div>
+                <div  style="width:8%"><button class="btn btn-danger" @click="deleteFromCart(item.item_id)" ><i class="fas fa-trash-alt"> <span> Delete</span> </i></button></div>
             </div>
             <hr>
         </div>
+         
+        <div class="column-header d-flex align-items-center">
+                
+                <div style="width:78%" class="text-center">TOTAL PRICE</div>
+               
+                <div style="width:14%">{{total}}</div>
+                <div style="width:8%"></div>
+            </div>
         </div>
 
          <span @click="createOrder()" class="btn btn-success m-5">Order</span>
@@ -167,6 +176,7 @@ export default {
         return {
             id: this.$route.query.id,
             order_id: 4,
+            total:0,
             // Create a new form instance
             form: new Form({
                 phoneNumber: "",
@@ -175,6 +185,10 @@ export default {
             })
         };
     },
+    mounted() {
+    console.log("Component mounted.");
+    this.getTotal(this.$store.state.lists);
+  },
     computed: {
         listsValue() {
             return this.$store.state.lists;
@@ -218,7 +232,7 @@ export default {
                     }
                 })
                 .then(response => {
-                    self.formData.phoneNumber = "";
+                   // self.formData.phoneNumber = "";
             
                     self.$store.state.lists = [];
                     // this.listsValue();
@@ -300,8 +314,16 @@ export default {
          deleteFromCart: function(id){
               this.$store.state.lists = this.$store.state.lists.filter(function(value, index, arr){ return value.item_id != id;});
               console.log(this.$store.state.lists);
+              console.log(id);
 
+         },
+         getTotal: function(array){
+             self = this; 
+          for(var i in array) { 
+        self.total += array[i].total;
          }
+    return self.total;
+ }
         
     }
 };
